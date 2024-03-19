@@ -97,10 +97,10 @@
 	@media (max-aspect-ratio: 1/1) {
 		.entry {
 			width: auto;
-			max-width: calc(30vh / 9 * 16);
+			max-width: calc(26vh / 9 * 16);
 
 			.video-frame {
-				height: 30vh;
+				height: 26vh;
 			}
 		}
 	}

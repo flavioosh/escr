@@ -335,3 +335,7 @@ export const ENTRIES: Entry[] = [
 		flag: gb,
 	},
 ];
+
+export const ENTRY_MAP: Record<string, Entry> = Object.fromEntries(
+	ENTRIES.map((entry) => [entry.id, entry]),
+);

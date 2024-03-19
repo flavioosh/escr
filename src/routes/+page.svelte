@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Entry from '$components/Entry.svelte';
+	import SplitLayout from '$components/SplitLayout.svelte';
 	import { calculateEloScores } from '$lib/elo';
 	import { entryA, entryB, results, scores, seed } from '$lib/store';
 	import { generateId } from '$lib/utils';
@@ -18,61 +19,26 @@
 	}
 </script>
 
-<main>
-	<div class="option left">
+<SplitLayout>
+	<div class="option" slot="left">
 		{#if $seed}
 			<Entry entry={$entryA} buttonColor="pink" on:vote={() => handleVote('a')} />
 		{/if}
 	</div>
-	<div class="splitter"></div>
-	<div class="option right">
+	<div class="option" slot="right">
 		{#if $seed}
 			<Entry entry={$entryB} buttonColor="cyan" on:vote={() => handleVote('b')} />
 		{/if}
 	</div>
-</main>
+</SplitLayout>
 
 <style lang="postcss">
-	main {
-		--color-left: var(--color-cyan);
-		--color-right: var(--color-pink);
-
+	.option {
 		height: 100%;
 
-		display: grid;
-		grid-template-columns: 1fr 4vw 1fr;
-
-		.left {
-			background: var(--color-left);
-		}
-
-		.splitter {
-			border-left: 4vw solid var(--color-left);
-			border-bottom: 100vh solid var(--color-right);
-		}
-
-		.right {
-			background: var(--color-right);
-		}
-
-		.option {
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			justify-content: center;
-		}
-	}
-
-	@media (max-aspect-ratio: 1/1) {
-		main {
-			grid-template-columns: 1fr;
-			grid-template-rows: 1fr 4vh 1fr;
-
-			.splitter {
-				border-left: none;
-				border-right: 100vw solid var(--color-left);
-				border-bottom: 4vh solid var(--color-right);
-			}
-		}
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
 	}
 </style>
