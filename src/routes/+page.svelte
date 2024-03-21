@@ -14,7 +14,10 @@
 			[$entryA.id]: newScoreA,
 			[$entryB.id]: newScoreB,
 		};
-		$results = [...$results, { a: $entryA.id, b: $entryB.id, winner }];
+		$results = [
+			...$results,
+			{ a: $entryA.id, b: $entryB.id, winner, timestamp: new Date().toISOString() },
+		];
 		$seed = generateId();
 	}
 </script>
