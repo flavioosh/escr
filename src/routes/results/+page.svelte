@@ -4,7 +4,9 @@
 
 	const TOP_TEN_SCORES = [12, 10, 8, 7, 6, 5, 4, 3, 2, 1];
 
-	$: topTen = Object.entries($scores)
+	let showDetails = false;
+
+	$: fullResults = Object.entries($scores)
 		.sort(([, a], [, b]) => {
 			if (a > b) {
 				return -1;
@@ -18,36 +20,46 @@
 				entry: ENTRY_MAP[id],
 				score,
 			};
-		})
-		.slice(0, 10);
+		});
+
+	$: displayedResults = showDetails ? fullResults : fullResults.slice(0, 10);
 </script>
 
 <section>
 	<h1>Results</h1>
 	<ol>
-		{#each topTen as { entry }, i}
+		{#each displayedResults as { entry }, i}
 			<li>
 				<div class="left">
-					<img src={entry.flag} alt="Flag of {entry.country}" />
 					<span>
 						{i + 1}
 					</span>
+					<img src={entry.flag} alt="Flag of {entry.country}" />
 				</div>
 				<div class="right">
 					<span class="country">
 						{entry.country}
 					</span>
-					<div class="score">{TOP_TEN_SCORES[i]}</div>
+					{#if i < 10}
+						<div class="score">{TOP_TEN_SCORES[i]}</div>
+					{/if}
 				</div>
 			</li>
 		{/each}
 	</ol>
+	<button class="expand" on:click={() => (showDetails = !showDetails)}>
+		{#if showDetails}
+			Show Summary
+		{:else}
+			Show Details
+		{/if}
+	</button>
 </section>
 
 <style lang="postcss">
 	section {
-		height: 100%;
-		padding: 1rem;
+		min-height: 100%;
+		padding: calc(1rem + var(--header-height)) 1rem 1rem;
 
 		display: flex;
 		flex-direction: column;
@@ -81,15 +93,15 @@
 				height: 3rem;
 
 				display: flex;
-				align-items: center;
-				gap: 0.75rem;
+				align-items: stretch;
+				gap: 0.5rem;
 
 				.left {
-					width: 10rem;
+					width: 9rem;
 
 					display: flex;
 					align-items: center;
-					justify-content: flex-end;
+					justify-content: space-between;
 					gap: 0.5rem;
 
 					font-weight: 500;
@@ -98,13 +110,15 @@
 
 					img {
 						height: 3rem;
+
+						box-shadow: 0 0 2px black;
 					}
 
 					span {
 						width: 2rem;
 
 						font-size: 1.375rem;
-						text-align: right;
+						text-align: left;
 					}
 				}
 
@@ -140,6 +154,18 @@
 					}
 				}
 			}
+		}
+
+		button.expand {
+			border: none;
+
+			font-size: 1.5rem;
+			font-weight: 600;
+
+			background: transparent;
+			color: #fff;
+
+			cursor: pointer;
 		}
 	}
 </style>
