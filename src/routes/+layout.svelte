@@ -1,4 +1,5 @@
 <script>
+	import Logo from '$components/Logo.svelte';
 	import '/src/app.postcss';
 </script>
 
@@ -8,7 +9,10 @@
 
 <main>
 	<header>
-		<a href="/" class="home" title="Home">escr</a>
+		<a href="/" class="logo">
+			<Logo />
+			<span>escr</span>
+		</a>
 		<nav>
 			<a href="/results" title="Results">
 				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
@@ -41,15 +45,25 @@
 			align-items: center;
 			justify-content: space-between;
 
-			a {
-				text-decoration: none;
-			}
+			a.logo {
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
 
-			a.home {
 				font-size: 1.5rem;
 				font-weight: 500;
 
 				color: #fff;
+
+				:global(svg) {
+					height: 2.25rem;
+
+					fill: #fff;
+				}
+			}
+
+			a {
+				text-decoration: none;
 			}
 
 			svg {
