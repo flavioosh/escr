@@ -107,7 +107,7 @@ export const ENTRIES: Entry[] = [
 		country: 'Czechia',
 		artist: 'Aiko',
 		song: 'Pedestal',
-		youtubeId: '5DbRldMKFUU',
+		youtubeId: '_iTcX6NlAqA',
 		flag: cz,
 	},
 	{
@@ -131,7 +131,7 @@ export const ENTRIES: Entry[] = [
 		country: 'Finland',
 		artist: 'Windows95man',
 		song: 'No Rules!',
-		youtubeId: 'Tf1NS1vEhSg',
+		youtubeId: 'aaIxsEPoS28',
 		flag: fi,
 	},
 	{
