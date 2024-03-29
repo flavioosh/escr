@@ -5,7 +5,10 @@
 	import { entryA, entryB, results, scores, seed } from '$lib/store';
 	import { generateId } from '$lib/utils';
 
-	async function handleVote(winner: 'a' | 'b') {
+	let leftKeyDown = false;
+	let rightKeyDown = false;
+
+	async function vote(winner: 'a' | 'b') {
 		const scoreA = $scores[$entryA.id];
 		const scoreB = $scores[$entryB.id];
 		const { a: newScoreA, b: newScoreB } = calculateEloScores(scoreA, scoreB, winner);
@@ -20,17 +23,37 @@
 		];
 		$seed = generateId();
 	}
+
+	async function handleKeyDown(event: KeyboardEvent) {
+		if (event.key === 'ArrowLeft' && !leftKeyDown) {
+			leftKeyDown = true;
+			await vote('a');
+		} else if (event.key === 'ArrowRight' && !rightKeyDown) {
+			rightKeyDown = true;
+			await vote('b');
+		}
+	}
+
+	async function handleKeyUp(event: KeyboardEvent) {
+		if (event.key === 'ArrowLeft') {
+			leftKeyDown = false;
+		} else if (event.key === 'ArrowRight') {
+			rightKeyDown = false;
+		}
+	}
 </script>
+
+<svelte:document on:keydown={handleKeyDown} on:keyup={handleKeyUp} />
 
 <SplitLayout>
 	<div class="option" slot="left">
 		{#if $seed}
-			<Entry entry={$entryA} buttonColor="pink" on:vote={() => handleVote('a')} />
+			<Entry entry={$entryA} buttonColor="pink" on:vote={() => vote('a')} />
 		{/if}
 	</div>
 	<div class="option" slot="right">
 		{#if $seed}
-			<Entry entry={$entryB} buttonColor="cyan" on:vote={() => handleVote('b')} />
+			<Entry entry={$entryB} buttonColor="cyan" on:vote={() => vote('b')} />
 		{/if}
 	</div>
 </SplitLayout>
