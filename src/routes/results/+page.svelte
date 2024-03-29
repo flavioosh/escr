@@ -44,7 +44,7 @@
 		</span>
 	{/if}
 	<ol>
-		{#each displayedResults as { entry, wins, losses, totalMatchups }, i}
+		{#each displayedResults as { entry, score, wins, losses, totalMatchups }, i}
 			<li>
 				<div class="result">
 					<div class="left">
@@ -64,15 +64,20 @@
 				</div>
 				{#if showDetails}
 					<div class="details">
-						<div class="losses" style:width="{(losses / totalMatchups) * 100}%" />
-						<span>
-							{wins}
-							{#if wins === 1}win{:else}wins{/if}
-						</span>
-						<span>
-							{losses}
-							{#if losses === 1}loss{:else}losses{/if}
-						</span>
+						<div class="elo-score">
+							{score}
+						</div>
+						<div class="wins-losses">
+							<div class="losses" style:width="{(losses / totalMatchups) * 100}%" />
+							<span>
+								{wins}
+								{#if wins === 1}win{:else}wins{/if}
+							</span>
+							<span>
+								{losses}
+								{#if losses === 1}loss{:else}losses{/if}
+							</span>
+						</div>
 					</div>
 				{/if}
 			</li>
@@ -195,33 +200,48 @@
 				}
 
 				.details {
-					margin-left: 9.5rem;
-					position: relative;
-
-					padding: 0.5rem;
-					height: 2rem;
-
 					display: flex;
-					align-items: center;
-					justify-content: space-between;
+					gap: 0.5rem;
 
-					background-color: var(--color-green);
+					.elo-score {
+						width: 9rem;
 
-					.losses {
-						position: absolute;
-						right: 0;
-						top: 0;
-						bottom: 0;
-
-						background-color: var(--color-red);
-					}
-
-					span {
-						z-index: 1;
-
-						font-weight: 500;
+						display: flex;
+						align-items: center;
+						justify-content: flex-end;
 
 						color: #fff;
+					}
+
+					.wins-losses {
+						flex-grow: 1;
+						position: relative;
+
+						padding: 0.5rem;
+						height: 2rem;
+
+						display: flex;
+						align-items: center;
+						justify-content: space-between;
+
+						background-color: var(--color-green);
+
+						.losses {
+							position: absolute;
+							right: 0;
+							top: 0;
+							bottom: 0;
+
+							background-color: var(--color-red);
+						}
+
+						span {
+							z-index: 1;
+
+							font-weight: 500;
+
+							color: #fff;
+						}
 					}
 				}
 			}
