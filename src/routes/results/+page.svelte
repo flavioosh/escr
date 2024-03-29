@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ENTRY_MAP } from '$lib/data';
-	import { scores } from '$lib/store';
+	import { results, scores } from '$lib/store';
 
 	const TOP_TEN_SCORES = [12, 10, 8, 7, 6, 5, 4, 3, 2, 1];
 
@@ -16,9 +16,20 @@
 			return 0;
 		})
 		.map(([id, score]) => {
+			const wins = $results.filter(
+				(result) =>
+					(result.a === id && result.winner === 'a') || (result.b === id && result.winner === 'b'),
+			).length;
+			const losses = $results.filter(
+				(result) =>
+					(result.a === id && result.winner === 'b') || (result.b === id && result.winner === 'a'),
+			).length;
 			return {
 				entry: ENTRY_MAP[id],
 				score,
+				wins,
+				losses,
+				totalMatchups: wins + losses,
 			};
 		});
 
@@ -27,23 +38,43 @@
 
 <section>
 	<h1>Results</h1>
+	{#if showDetails}
+		<span class="total-matchups">
+			Total matchups: {$results.length}
+		</span>
+	{/if}
 	<ol>
-		{#each displayedResults as { entry }, i}
+		{#each displayedResults as { entry, wins, losses, totalMatchups }, i}
 			<li>
-				<div class="left">
-					<span>
-						{i + 1}
-					</span>
-					<img src={entry.flag} alt="Flag of {entry.country}" />
+				<div class="result">
+					<div class="left">
+						<span>
+							{i + 1}
+						</span>
+						<img src={entry.flag} alt="Flag of {entry.country}" />
+					</div>
+					<div class="right">
+						<span class="country">
+							{entry.country}
+						</span>
+						{#if i < 10}
+							<div class="score">{TOP_TEN_SCORES[i]}</div>
+						{/if}
+					</div>
 				</div>
-				<div class="right">
-					<span class="country">
-						{entry.country}
-					</span>
-					{#if i < 10}
-						<div class="score">{TOP_TEN_SCORES[i]}</div>
-					{/if}
-				</div>
+				{#if showDetails}
+					<div class="details">
+						<div class="losses" style:width="{(losses / totalMatchups) * 100}%" />
+						<span>
+							{wins}
+							{#if wins === 1}win{:else}wins{/if}
+						</span>
+						<span>
+							{losses}
+							{#if losses === 1}loss{:else}losses{/if}
+						</span>
+					</div>
+				{/if}
 			</li>
 		{/each}
 	</ol>
@@ -77,6 +108,13 @@
 			color: #fff;
 		}
 
+		.total-matchups {
+			font-size: 1.25rem;
+			font-weight: 500;
+
+			color: #fff;
+		}
+
 		ol {
 			margin: 0;
 			width: 100%;
@@ -90,66 +128,99 @@
 			list-style: none;
 
 			li {
-				height: 3rem;
-
-				display: flex;
-				align-items: stretch;
-				gap: 0.5rem;
-
-				.left {
-					width: 9rem;
+				.result {
+					height: 3rem;
 
 					display: flex;
-					align-items: center;
-					justify-content: space-between;
+					align-items: stretch;
 					gap: 0.5rem;
 
-					font-weight: 500;
-
-					color: #fff;
-
-					img {
-						height: 3rem;
-
-						box-shadow: 0 0 2px black;
-					}
-
-					span {
-						width: 2rem;
-
-						font-size: 1.375rem;
-						text-align: left;
-					}
-				}
-
-				.right {
-					flex-grow: 1;
-
-					padding-left: 1rem;
-
-					display: flex;
-					align-items: center;
-					justify-content: space-between;
-
-					background-color: #fff;
-
-					.country {
-						font-size: 1.5rem;
-					}
-
-					.score {
-						width: 3rem;
-						height: 3rem;
-						padding: 0.25rem;
+					.left {
+						width: 9rem;
 
 						display: flex;
 						align-items: center;
-						justify-content: center;
+						justify-content: space-between;
+						gap: 0.5rem;
 
-						font-size: 1.5rem;
 						font-weight: 500;
 
-						background: var(--color-blue);
+						color: #fff;
+
+						img {
+							height: 3rem;
+
+							box-shadow: 0 0 2px #000;
+						}
+
+						span {
+							width: 2rem;
+
+							font-size: 1.375rem;
+							text-align: left;
+						}
+					}
+
+					.right {
+						flex-grow: 1;
+
+						padding-left: 1rem;
+
+						display: flex;
+						align-items: center;
+						justify-content: space-between;
+
+						background-color: #fff;
+
+						.country {
+							font-size: 1.5rem;
+						}
+
+						.score {
+							width: 3rem;
+							height: 3rem;
+							padding: 0.25rem;
+
+							display: flex;
+							align-items: center;
+							justify-content: center;
+
+							font-size: 1.5rem;
+							font-weight: 500;
+
+							background: var(--color-blue);
+							color: #fff;
+						}
+					}
+				}
+
+				.details {
+					margin-left: 9.5rem;
+					position: relative;
+
+					padding: 0.5rem;
+					height: 2rem;
+
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+
+					background-color: var(--color-green);
+
+					.losses {
+						position: absolute;
+						right: 0;
+						top: 0;
+						bottom: 0;
+
+						background-color: var(--color-red);
+					}
+
+					span {
+						z-index: 1;
+
+						font-weight: 500;
+
 						color: #fff;
 					}
 				}
