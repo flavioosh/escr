@@ -1,14 +1,18 @@
-<script>
+<script lang="ts">
 	import Logo from '$components/Logo.svelte';
 	import '/src/app.postcss';
+
+	let scrollY: number;
 </script>
+
+<svelte:window bind:scrollY />
 
 <svelte:head>
 	<title>ESCR</title>
 </svelte:head>
 
 <main>
-	<header>
+	<header class:background={scrollY > 0}>
 		<a href="/" class="logo">
 			<Logo />
 			<span>escr</span>
@@ -37,6 +41,7 @@
 			position: fixed;
 			left: 0;
 			right: 0;
+			z-index: 10;
 
 			height: var(--header-height);
 			padding: 0 0.75rem;
@@ -44,6 +49,12 @@
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
+
+			transition: background .2s;
+
+			&.background {
+				background-color: var(--color-cyan);
+			}
 
 			a.logo {
 				display: flex;
