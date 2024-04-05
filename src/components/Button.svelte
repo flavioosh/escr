@@ -22,6 +22,8 @@
 		border: none;
 		height: var(--button-height);
 
+		white-space: nowrap;
+
 		background-color: var(--button-color);
 		color: #fff;
 
