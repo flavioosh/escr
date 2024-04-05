@@ -30,7 +30,7 @@
 			<span class="song">{entry.song}</span>
 			<span class="artist">{entry.artist}</span>
 		</div>
-		<Button color={buttonColor} on:click={() => dispatch('vote')}>Vote</Button>
+		<Button color={buttonColor} size="large" on:click={() => dispatch('vote')}>Vote</Button>
 	</footer>
 </div>
 

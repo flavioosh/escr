@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Button from '$components/Button.svelte';
 	import { ENTRY_MAP } from '$lib/data';
 	import { results, scores } from '$lib/store';
 
@@ -83,13 +84,13 @@
 			</li>
 		{/each}
 	</ol>
-	<button class="expand" on:click={() => (showDetails = !showDetails)}>
+	<Button color="pink" on:click={() => (showDetails = !showDetails)}>
 		{#if showDetails}
-			Show Summary
+			Hide details
 		{:else}
-			Show Details
+			Show details
 		{/if}
-	</button>
+	</Button>
 </section>
 
 <style lang="postcss">
@@ -245,18 +246,6 @@
 					}
 				}
 			}
-		}
-
-		button.expand {
-			border: none;
-
-			font-size: 1.5rem;
-			font-weight: 600;
-
-			background: transparent;
-			color: #fff;
-
-			cursor: pointer;
 		}
 	}
 </style>

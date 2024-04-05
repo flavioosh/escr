@@ -1,32 +1,51 @@
 <script context="module" lang="ts">
-	export type ButtonColor = 'cyan' | 'pink';
+	export type ButtonColor = 'cyan' | 'pink' | 'red';
+	export type ButtonSize = 'regular' | 'large';
 </script>
 
 <script lang="ts">
 	export let color: ButtonColor = 'cyan';
+	export let size: ButtonSize = 'regular';
 </script>
 
-<button on:click style:--button-color="var(--color-{color})">
+<button on:click style:--button-color="var(--color-{color})" class={size}>
 	<slot />
 </button>
 
 <style lang="postcss">
 	button {
 		--angle-width: 0.5rem;
-		--button-height: 3.5rem;
 
 		position: relative;
 
 		margin: 0 var(--angle-width);
-		padding: 0 1.5rem;
+		border: none;
 		height: var(--button-height);
 
-		border: none;
 		background-color: var(--button-color);
 		color: #fff;
 
-		font-size: 2rem;
-		font-weight: 600;
+		cursor: pointer;
+
+		transition: filter 0.2s;
+
+		&.regular {
+			--button-height: 2.5rem;
+
+			padding: 0 1rem;
+
+			font-size: 1.25rem;
+			font-weight: 500;
+		}
+
+		&.large {
+			--button-height: 3.5rem;
+
+			padding: 0 1.5rem;
+
+			font-size: 2rem;
+			font-weight: 600;
+		}
 
 		&::before {
 			content: '';
@@ -52,6 +71,12 @@
 
 			border-right: var(--angle-width) solid transparent;
 			border-top: var(--button-height) solid var(--button-color);
+		}
+
+		&:focus-visible {
+			outline: none;
+
+			filter: drop-shadow(0.375rem 0.375rem 0 var(--color-yellow));
 		}
 	}
 </style>
