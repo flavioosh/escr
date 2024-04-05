@@ -2,6 +2,7 @@
 	import Button from '$components/Button.svelte';
 	import { ENTRY_MAP } from '$lib/data';
 	import { results, scores } from '$lib/store';
+	import { slide } from 'svelte/transition';
 
 	const TOP_TEN_SCORES = [12, 10, 8, 7, 6, 5, 4, 3, 2, 1];
 
@@ -40,13 +41,13 @@
 <section>
 	<h1>Results</h1>
 	{#if showDetails}
-		<span class="total-matchups">
+		<span class="total-matchups" transition:slide>
 			Total matchups: {$results.length}
 		</span>
 	{/if}
 	<ol>
 		{#each displayedResults as { entry, score, wins, losses, totalMatchups }, i}
-			<li>
+			<li transition:slide>
 				<div class="result">
 					<div class="left">
 						<span>
@@ -64,7 +65,7 @@
 					</div>
 				</div>
 				{#if showDetails}
-					<div class="details">
+					<div class="details" transition:slide>
 						<div class="elo-score">
 							{score}
 						</div>

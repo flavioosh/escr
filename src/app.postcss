@@ -12,6 +12,10 @@
 	--header-height: 3rem;
 }
 
+* {
+	box-sizing: border-box;
+}
+
 html,
 body {
 	height: 100%;
@@ -22,4 +26,11 @@ body {
 	font-optical-sizing: auto;
 	font-weight: 400;
 	font-style: normal;
+
+	background-color: var(--color-cyan);
+}
+
+::selection {
+	background-color: var(--color-pink);
+	color: #fff;
 }
