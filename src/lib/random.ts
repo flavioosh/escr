@@ -10,7 +10,7 @@ export function xoshiro128pf(seed?: string | null): Xoshiro128pfOutput {
 	let state: Uint32Array;
 
 	if (seed) {
-		var hash = sha256.update(seed);
+		const hash = sha256.update(seed);
 		const data = new Uint8Array(hash.array());
 		state = new Uint32Array(data.buffer, 0, 4);
 	} else {
