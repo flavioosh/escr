@@ -43,22 +43,26 @@
 	}
 </script>
 
-<svelte:document on:keydown={handleKeyDown} on:keyup={handleKeyUp} />
+<svelte:document onkeydown={handleKeyDown} onkeyup={handleKeyUp} />
 
 <SplitLayout>
-	<div class="option" slot="left">
-		{#if $seed}
-			<Entry entry={$entryA} buttonColor="pink" on:vote={() => vote('a')} />
-		{/if}
-	</div>
-	<div class="option" slot="right">
-		{#if $seed}
-			<Entry entry={$entryB} buttonColor="cyan" on:vote={() => vote('b')} />
-		{/if}
-	</div>
+	{#snippet left()}
+		<div class="option" >
+			{#if $seed}
+				<Entry entry={$entryA} buttonColor="pink" onvote={() => vote('a')} />
+			{/if}
+		</div>
+	{/snippet}
+	{#snippet right()}
+		<div class="option" >
+			{#if $seed}
+				<Entry entry={$entryB} buttonColor="cyan" onvote={() => vote('b')} />
+			{/if}
+		</div>
+	{/snippet}
 </SplitLayout>
 
-<style lang="postcss">
+<style>
 	.option {
 		height: 100%;
 

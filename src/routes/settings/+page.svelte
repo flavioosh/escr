@@ -4,17 +4,17 @@
 	import ExportDialog from './ExportDialog.svelte';
 	import ImportDialog from './ImportDialog.svelte';
 
-	let exportDialog: ExportDialog;
-	let importDialog: ImportDialog;
-	let deleteDialog: DeleteDialog;
+	let exportDialog: ExportDialog | undefined = $state();
+	let importDialog: ImportDialog | undefined = $state();
+	let deleteDialog: DeleteDialog | undefined = $state();
 </script>
 
 <section>
 	<h1>Settings</h1>
 
-	<Button color="pink" on:click={exportDialog.show}>Export data</Button>
-	<Button color="pink" on:click={importDialog.show}>Import data</Button>
-	<Button color="red" on:click={deleteDialog.show}>Delete data</Button>
+	<Button color="pink" onclick={exportDialog?.show}>Export data</Button>
+	<Button color="pink" onclick={importDialog?.show}>Import data</Button>
+	<Button color="red" onclick={deleteDialog?.show}>Delete data</Button>
 </section>
 
 <ExportDialog bind:this={exportDialog} />
@@ -23,7 +23,7 @@
 
 <DeleteDialog bind:this={deleteDialog} />
 
-<style lang="postcss">
+<style>
 	section {
 		min-height: 100%;
 		padding: calc(1rem + var(--header-height)) 1rem 1rem;

@@ -6,9 +6,9 @@
 
 	const TOP_TEN_SCORES = [12, 10, 8, 7, 6, 5, 4, 3, 2, 1];
 
-	let showDetails = false;
+	let showDetails = $state(false);
 
-	$: fullResults = Object.entries($scores)
+	let fullResults = $derived(Object.entries($scores)
 		.sort(([, a], [, b]) => {
 			if (a > b) {
 				return -1;
@@ -33,9 +33,9 @@
 				losses,
 				totalMatchups: wins + losses,
 			};
-		});
+		}));
 
-	$: displayedResults = showDetails ? fullResults : fullResults.slice(0, 10);
+	let displayedResults = $derived(showDetails ? fullResults : fullResults.slice(0, 10));
 </script>
 
 <section>
@@ -70,7 +70,7 @@
 							{score}
 						</div>
 						<div class="wins-losses">
-							<div class="losses" style:width="{(losses / totalMatchups) * 100}%" />
+							<div class="losses" style:width="{(losses / totalMatchups) * 100}%"></div>
 							<span>
 								{wins}
 								{#if wins === 1}win{:else}wins{/if}
@@ -85,7 +85,7 @@
 			</li>
 		{/each}
 	</ol>
-	<Button color="pink" on:click={() => (showDetails = !showDetails)}>
+	<Button color="pink" onclick={() => (showDetails = !showDetails)}>
 		{#if showDetails}
 			Hide details
 		{:else}
@@ -94,7 +94,7 @@
 	</Button>
 </section>
 
-<style lang="postcss">
+<style>
 	section {
 		min-height: 100%;
 		padding: calc(1rem + var(--header-height)) 1rem 1rem;

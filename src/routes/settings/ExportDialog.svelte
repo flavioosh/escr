@@ -5,16 +5,16 @@
 	import { results, scores, seed } from '$lib/store';
 	import { slide } from 'svelte/transition';
 
-	let dialog: BaseDialog;
+	let dialog: BaseDialog | undefined = $state();
 
-	let showExportCode = false;
+	let showExportCode = $state(false);
 
 	export function show() {
-		dialog.show();
+		dialog?.show();
 	}
 
 	export function close() {
-		dialog.close();
+		dialog?.close();
 	}
 
 	function handleClose() {
@@ -29,17 +29,17 @@
 		await navigator.clipboard.writeText(exportData!);
 	}
 
-	$: exportData =
-		$seed &&
-		save({
-			version: 1,
-			seed: $seed as string,
-			results: $results,
-			scores: $scores,
-		});
+	let exportData =
+		$derived($seed &&
+			save({
+				version: 1,
+				seed: $seed as string,
+				results: $results,
+				scores: $scores,
+			}));
 </script>
 
-<BaseDialog bind:this={dialog} title="Export Data" on:close={handleClose}>
+<BaseDialog bind:this={dialog} title="Export Data" onclose={handleClose}>
 	<div>
 		<p>
 			You can use this code in the import section if you want to transfer your data between devices.
@@ -48,24 +48,26 @@
 			<code transition:slide>{exportData}</code>
 		{/if}
 	</div>
-	<DialogActions
-		slot="footer"
-		actions={[
-			{
-				label: `${showExportCode ? 'Hide' : 'Show'} export code`,
-				color: 'cyan',
-				fn: handleShowExportData,
-			},
-			{
-				label: 'Copy export code',
-				color: 'pink',
-				fn: handleCopyExportData,
-			},
-		]}
-	/>
+	{#snippet footer()}
+		<DialogActions
+
+			actions={[
+				{
+					label: `${showExportCode ? 'Hide' : 'Show'} export code`,
+					color: 'cyan',
+					fn: handleShowExportData,
+				},
+				{
+					label: 'Copy export code',
+					color: 'pink',
+					fn: handleCopyExportData,
+				},
+			]}
+		/>
+	{/snippet}
 </BaseDialog>
 
-<style lang="postcss">
+<style>
 	div {
 		max-width: 60vw;
 

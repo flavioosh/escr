@@ -1,27 +1,33 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
+	import type { Snippet } from 'svelte';
 
-	const dispatch = createEventDispatcher();
+	type Props = {
+		title?: string;
+		onshow?: () => void;
+		onclose?: () => void;
+		children?: Snippet;
+		footer?: Snippet;
+	}
 
-	export let title: string = '';
+	let { title = '', onshow, onclose, children, footer }: Props = $props();
 
-	let dialogElement: HTMLDialogElement;
+	let dialogElement: HTMLDialogElement | undefined = $state();
 
 	export function show() {
-		dialogElement.showModal();
-		dispatch('show');
+		dialogElement?.showModal();
+		onshow?.();
 	}
 
 	export function close() {
-		dialogElement.close();
-		dispatch('close');
+		dialogElement?.close();
+		onclose?.();
 	}
 </script>
 
 <dialog bind:this={dialogElement}>
 	<header>
 		<span>{title}</span>
-		<button on:click={close}>
+		<button onclick={close} title="Close" aria-label="close">
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
 				<path
 					d="m249-183-66-66 231-231-231-231 66-66 231 231 231-231 66 66-231 231 231 231-66 66-231-231-231 231Z"
@@ -30,16 +36,16 @@
 		</button>
 	</header>
 	<section>
-		<slot />
+		{@render children?.()}
 	</section>
-	{#if $$slots.footer}
+	{#if footer}
 		<footer>
-			<slot name="footer" />
+			{@render footer()}
 		</footer>
 	{/if}
 </dialog>
 
-<style lang="postcss">
+<style>
 	dialog {
 		border: none;
 		padding: 0 0 1.5rem;

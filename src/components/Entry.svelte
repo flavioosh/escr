@@ -1,12 +1,14 @@
 <script lang="ts">
 	import type { Entry } from '$lib/types/entry';
-	import { createEventDispatcher } from 'svelte';
 	import Button, { type ButtonColor } from '$components/Button.svelte';
 
-	const dispatch = createEventDispatcher();
+	type Props = {
+		entry: Entry;
+		buttonColor: ButtonColor;
+		onvote: () => void;
+	}
 
-	export let entry: Entry;
-	export let buttonColor: ButtonColor;
+	let { entry, buttonColor, onvote }: Props = $props();
 </script>
 
 <div class="entry">
@@ -30,11 +32,11 @@
 			<span class="song">{entry.song}</span>
 			<span class="artist">{entry.artist}</span>
 		</div>
-		<Button color={buttonColor} size="large" on:click={() => dispatch('vote')}>Vote</Button>
+		<Button color={buttonColor} size="large" onclick={onvote}>Vote</Button>
 	</footer>
 </div>
 
-<style lang="postcss">
+<style>
 	.entry {
 		--color-info-foreground: #fff;
 
@@ -105,7 +107,7 @@
 		}
 	}
 
-	@media (max-width: 576px) {
+	@media (max-width: 640px) {
 		.entry {
 			width: 90vw;
 

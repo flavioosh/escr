@@ -1,18 +1,26 @@
-<script context="module" lang="ts">
+<script module lang="ts">
 	export type ButtonColor = 'cyan' | 'pink' | 'red';
 	export type ButtonSize = 'regular' | 'large';
 </script>
 
 <script lang="ts">
-	export let color: ButtonColor = 'cyan';
-	export let size: ButtonSize = 'regular';
+	import type { Snippet } from 'svelte';
+
+	type Props = {
+		color?: ButtonColor;
+		size?: ButtonSize;
+		onclick?: () => void;
+		children?: Snippet;
+	}
+
+	let { color = 'cyan', size = 'regular', children, onclick }: Props = $props();
 </script>
 
-<button on:click style:--button-color="var(--color-{color})" class={size}>
-	<slot />
+<button {onclick} style:--button-color="var(--color-{color})" class={size}>
+	{@render children?.()}
 </button>
 
-<style lang="postcss">
+<style>
 	button {
 		--angle-width: 0.5rem;
 

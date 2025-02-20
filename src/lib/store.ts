@@ -5,7 +5,7 @@ import type { Entry } from '$lib/types/entry';
 import type { Result } from '$lib/types/result';
 import { generateId } from '$lib/utils';
 import { persisted } from 'svelte-persisted-store';
-import { derived, type Stores } from 'svelte/store';
+import { derived } from 'svelte/store';
 
 // Populate the seed with an initial value, as it won't get
 // persisted until the store is updated
@@ -22,37 +22,34 @@ export const scores = persisted<Record<string, number>>(
 
 export const results = persisted<Result[]>('results', []);
 
-export const entries = derived<Stores, { entryA: Entry; entryB: Entry }>(
-	[seed, results],
-	([$seed, $results]) => {
-		function getProbabilities(excludeIndex: number | null = null): number[] {
-			const entryOccurrences = Object.fromEntries(ENTRIES.map((entry) => [entry.id, 0]));
-			for (const result of $results) {
-				entryOccurrences[result.a] += 1;
-				entryOccurrences[result.b] += 1;
-			}
-
-			const occurrences = Object.entries(entryOccurrences).map(([, occurrences]) => occurrences);
-			const minimumOccurrences = Math.min(...occurrences);
-			const maximumOccurrences = Math.max(...occurrences);
-
-			return occurrences.map((occurrence, i) =>
-				i === excludeIndex ? 0 : 10 * (maximumOccurrences - (occurrence - minimumOccurrences)) + 1,
-			);
+export const entries = derived([seed, results], ([$seed, $results]) => {
+	function getProbabilities(excludeIndex: number | null = null): number[] {
+		const entryOccurrences = Object.fromEntries(ENTRIES.map((entry) => [entry.id, 0]));
+		for (const result of $results) {
+			entryOccurrences[result.a] += 1;
+			entryOccurrences[result.b] += 1;
 		}
 
-		const random = xoshiro128pf($seed);
-		const entryScoresA = getProbabilities();
-		const entryIndexA = random.weighted(entryScoresA);
-		const entryScoresB = getProbabilities(entryIndexA);
-		const entryIndexB = random.weighted(entryScoresB);
+		const occurrences = Object.entries(entryOccurrences).map(([, occurrences]) => occurrences);
+		const minimumOccurrences = Math.min(...occurrences);
+		const maximumOccurrences = Math.max(...occurrences);
 
-		const entryA = ENTRIES[entryIndexA];
-		const entryB = ENTRIES[entryIndexB];
+		return occurrences.map((occurrence, i) =>
+			i === excludeIndex ? 0 : 10 * (maximumOccurrences - (occurrence - minimumOccurrences)) + 1,
+		);
+	}
 
-		return { entryA, entryB };
-	},
-);
+	const random = xoshiro128pf($seed);
+	const entryScoresA = getProbabilities();
+	const entryIndexA = random.weighted(entryScoresA);
+	const entryScoresB = getProbabilities(entryIndexA);
+	const entryIndexB = random.weighted(entryScoresB);
+
+	const entryA = ENTRIES[entryIndexA];
+	const entryB = ENTRIES[entryIndexB];
+
+	return { entryA, entryB };
+});
 
 export const entryA = derived(entries, ($entries) => $entries.entryA);
 export const entryB = derived(entries, ($entries) => $entries.entryB);

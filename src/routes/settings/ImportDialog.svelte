@@ -5,17 +5,17 @@
 	import { results, scores, seed } from '$lib/store';
 	import { slide } from 'svelte/transition';
 
-	let dialog: BaseDialog;
+	let dialog: BaseDialog | undefined = $state();
 
-	let importText: string = '';
-	let error: string = '';
+	let importText: string = $state('');
+	let error: string = $state('');
 
 	export function show() {
-		dialog.show();
+		dialog?.show();
 	}
 
 	export function close() {
-		dialog.close();
+		dialog?.close();
 	}
 
 	function handleClose() {
@@ -40,29 +40,31 @@
 	}
 </script>
 
-<BaseDialog bind:this={dialog} title="Import Data" on:close={handleClose}>
+<BaseDialog bind:this={dialog} title="Import Data" onclose={handleClose}>
 	<p>Importing will overwrite your existing data.</p>
 	<div>
-		<textarea placeholder="Paste your code here" bind:value={importText} />
+		<textarea placeholder="Paste your code here" bind:value={importText}></textarea>
 		{#if error}
 			<div class="error" transition:slide>
 				{error}
 			</div>
 		{/if}
 	</div>
-	<DialogActions
-		slot="footer"
-		actions={[
-			{
-				label: 'Import',
-				color: 'pink',
-				fn: handleImport,
-			},
-		]}
-	/>
+	{#snippet footer()}
+		<DialogActions
+
+			actions={[
+				{
+					label: 'Import',
+					color: 'pink',
+					fn: handleImport,
+				},
+			]}
+		/>
+	{/snippet}
 </BaseDialog>
 
-<style lang="postcss">
+<style>
 	p {
 		margin: 0;
 

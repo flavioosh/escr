@@ -5,14 +5,14 @@
 	import { results, scores, seed } from '$lib/store';
 	import { generateId } from '$lib/utils';
 
-	let dialog: BaseDialog;
+	let dialog: BaseDialog | undefined = $state();
 
 	export function show() {
-		dialog.show();
+		dialog?.show();
 	}
 
 	export function close() {
-		dialog.close();
+		dialog?.close();
 	}
 
 	function handleDeleteData() {
@@ -26,24 +26,26 @@
 
 <BaseDialog bind:this={dialog} title="Delete Data">
 	<p>Are you sure you want to delete all of your data? This is irreversible.</p>
-	<DialogActions
-		slot="footer"
-		actions={[
-			{
-				label: 'Yes',
-				color: 'red',
-				fn: handleDeleteData,
-			},
-			{
-				label: 'No',
-				color: 'cyan',
-				fn: close,
-			},
-		]}
-	/>
+	{#snippet footer()}
+		<DialogActions
+
+			actions={[
+				{
+					label: 'Yes',
+					color: 'red',
+					fn: handleDeleteData,
+				},
+				{
+					label: 'No',
+					color: 'cyan',
+					fn: close,
+				},
+			]}
+		/>
+	{/snippet}
 </BaseDialog>
 
-<style lang="postcss">
+<style>
 	p {
 		margin: 0;
 

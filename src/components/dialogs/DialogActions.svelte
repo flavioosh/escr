@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
 	import type { ButtonColor } from '$components/Button.svelte';
 
 	export type DialogAction = {
@@ -11,18 +11,22 @@
 <script lang="ts">
 	import Button from '$components/Button.svelte';
 
-	export let actions: DialogAction[];
+	type Props = {
+		actions: DialogAction[];
+	}
+
+	let { actions }: Props = $props();
 </script>
 
 <div>
 	{#each actions as { label, color, fn }}
-		<Button {color} on:click={fn}>
+		<Button {color} onclick={fn}>
 			{label}
 		</Button>
 	{/each}
 </div>
 
-<style lang="postcss">
+<style>
 	div {
 		display: flex;
 		justify-content: center;

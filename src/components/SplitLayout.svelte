@@ -1,14 +1,25 @@
+<script lang="ts">
+	import type { Snippet } from 'svelte';
+
+	type Props = {
+		left: Snippet;
+		right: Snippet;
+	}
+
+	let { left, right }: Props = $props();
+</script>
+
 <div class="split">
 	<section class="left">
-		<slot name="left" />
+		{@render left()}
 	</section>
 	<div class="splitter"></div>
 	<section class="right">
-		<slot name="right" />
+		{@render right()}
 	</section>
 </div>
 
-<style lang="postcss">
+<style>
 	.split {
 		--color-left: var(--color-cyan);
 		--color-right: var(--color-pink);
